@@ -1,0 +1,339 @@
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+
+/**
+ * BlueWaves
+ * Black screen, blue wave line, blue fill below the wave, black above it.
+ * The waves move continuously to the right. Pure WebGL, no dependencies.
+ *
+ * Usage:
+ *   <BlueWaves />                              // fills its parent (parent needs a height)
+ *   <div style={{ height: "100vh" }}><BlueWaves /></div>
+ *
+ * Props (all optional):
+ *   speed      - wave cycles per second, moving right (default 0.25)
+ *   frequency  - number of full waves across the screen (default 2)
+ *   amplitude  - wave height, 0..0.5 of screen    (default 0.1)
+ *   level      - vertical position, 0 bottom..1 top (default 0.45)
+ *   color      - [r, g, b] blue, values 0..1      (default [0.0, 0.45, 1.0])
+ */
+
+const VERTEX = `
+attribute vec2 a_pos;
+void main() {
+  gl_Position = vec4(a_pos, 0.0, 1.0);
+}
+`
+
+const FRAGMENT = `
+precision highp float;
+
+uniform vec2  u_res;
+uniform float u_time;
+uniform float u_speed;
+uniform float u_amp;
+uniform float u_freq;
+uniform float u_level;
+uniform vec3  u_color;
+
+// One perfect sine wave: y = sin(2*PI*freq*x - phase).
+// Subtracting the phase makes the wave travel to the RIGHT.
+float waveHeight(float x, float phase) {
+  return sin(6.28318530718 * u_freq * x - phase);
+}
+
+void main() {
+  vec2 uv = gl_FragCoord.xy / u_res;          // 0..1, origin bottom-left
+  float phase = u_time * u_speed * 6.28318530718; // speed = wave cycles per second
+
+  float y = u_level + waveHeight(uv.x, phase) * u_amp;
+
+  // Signed distance (in screen-height units) from the wave line
+  float d = uv.y - y;
+  float px = 1.5 / u_res.y;                   // ~1.5px edge softness
+
+  // Below the wave -> blue body, above -> black
+  float body = 1.0 - smoothstep(-px, px, d);
+
+  // Fade the body slightly toward the bottom for depth
+  float depth = mix(0.35, 0.85, smoothstep(0.0, y, uv.y));
+  vec3 fill = u_color * depth * body;
+
+  // Bright crest line on the wave edge
+  float line = 1.0 - smoothstep(0.0, px * 2.5, abs(d));
+  vec3 crest = mix(u_color, vec3(1.0), 0.55) * line;
+
+  // Soft glow just above the crest
+  float glow = exp(-max(d, 0.0) * 28.0) * step(0.0, d) * 0.35;
+  vec3 halo = u_color * glow;
+
+  vec3 col = fill + halo + crest;
+  gl_FragColor = vec4(col, 1.0);
+}
+`
+
+function compile(gl, type, src) {
+  const shader = gl.createShader(type)
+  gl.shaderSource(shader, src)
+  gl.compileShader(shader)
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    const log = gl.getShaderInfoLog(shader)
+    gl.deleteShader(shader)
+    throw new Error('Shader compile error: ' + log)
+  }
+  return shader
+}
+
+/** Prefer a still frame when the user asks the OS to reduce motion. */
+function prefersReducedMotion() {
+  if (typeof window === 'undefined' || !window.matchMedia) return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+const hex = ([r, g, b]) =>
+  '#' +
+  [r, g, b]
+    .map((c) => Math.round(Math.min(Math.max(c, 0), 1) * 255).toString(16).padStart(2, '0'))
+    .join('')
+
+/**
+ * Still-frame fallback when WebGL is unavailable or motion is reduced —
+ * same wave shape, zero per-frame GPU work.
+ */
+function staticWaveUrl({ frequency, amplitude, level, color }) {
+  const W = 1200
+  const H = 600
+  const mid = (1 - level) * H
+  const amp = amplitude * H
+  const points = []
+  for (let i = 0; i <= 120; i++) {
+    const x = (i / 120) * W
+    const y = mid - Math.sin(2 * Math.PI * frequency * (i / 120)) * amp
+    points.push(`${x.toFixed(1)},${y.toFixed(1)}`)
+  }
+  const line = `M${points.join(' L')}`
+  const fill = hex(color)
+  const crest = hex(color.map((c) => c + (1 - c) * 0.55))
+
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" preserveAspectRatio="none" viewBox="0 0 ${W} ${H}">` +
+    `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">` +
+    `<stop offset="0" stop-color="${fill}" stop-opacity="0.85"/>` +
+    `<stop offset="1" stop-color="${fill}" stop-opacity="0.3"/>` +
+    `</linearGradient></defs>` +
+    `<rect width="${W}" height="${H}" fill="#000000"/>` +
+    `<path d="${line} L${W},${H} L0,${H} Z" fill="url(#g)"/>` +
+    `<path d="${line}" fill="none" stroke="${crest}" stroke-width="3"/>` +
+    `</svg>`
+
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
+}
+
+export default function BlueWaves({
+  speed = 0.25,
+  frequency = 1,
+  amplitude = 0.1,
+  level = 0.7,
+  color = [0.0, 0.45, 1.0],
+  className = '',
+  style = {},
+}) {
+  const canvasRef = useRef(null)
+  const propsRef = useRef({ speed, frequency, amplitude, level, color })
+  // Paint a static SVG first (cheap SI / LCP), then upgrade to WebGL after idle.
+  const [live, setLive] = useState(false)
+
+  useLayoutEffect(() => {
+    propsRef.current = { speed, frequency, amplitude, level, color }
+  })
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return undefined
+
+    let cancelled = false
+    const enable = () => {
+      if (!cancelled) setLive(true)
+    }
+
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(enable, { timeout: 1800 })
+      return () => {
+        cancelled = true
+        window.cancelIdleCallback(id)
+      }
+    }
+
+    const t = window.setTimeout(enable, 200)
+    return () => {
+      cancelled = true
+      window.clearTimeout(t)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!live) return
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const gl = canvas.getContext('webgl', {
+      antialias: false,
+      alpha: false,
+      depth: false,
+      stencil: false,
+      preserveDrawingBuffer: false,
+      powerPreference: 'low-power',
+    })
+    if (!gl) {
+      console.warn('WebGL is not supported in this browser.')
+      setLive(false)
+      return
+    }
+
+    const program = gl.createProgram()
+    const vs = compile(gl, gl.VERTEX_SHADER, VERTEX)
+    const fs = compile(gl, gl.FRAGMENT_SHADER, FRAGMENT)
+    gl.attachShader(program, vs)
+    gl.attachShader(program, fs)
+    gl.linkProgram(program)
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(program))
+      setLive(false)
+      return
+    }
+    gl.useProgram(program)
+
+    // Fullscreen triangle-pair
+    const buffer = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      gl.STATIC_DRAW
+    )
+    const loc = gl.getAttribLocation(program, 'a_pos')
+    gl.enableVertexAttribArray(loc)
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
+
+    const u = {
+      res: gl.getUniformLocation(program, 'u_res'),
+      time: gl.getUniformLocation(program, 'u_time'),
+      speed: gl.getUniformLocation(program, 'u_speed'),
+      amp: gl.getUniformLocation(program, 'u_amp'),
+      freq: gl.getUniformLocation(program, 'u_freq'),
+      level: gl.getUniformLocation(program, 'u_level'),
+      color: gl.getUniformLocation(program, 'u_color'),
+    }
+
+    // Phones report DPR 3 but have a fraction of the fill rate — the wave is a
+    // soft gradient behind a dark overlay, so 1x looks fine and stays cheap.
+    const coarse =
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(any-pointer: coarse)').matches ||
+      (navigator.maxTouchPoints || 0) > 0
+    const maxDpr = coarse ? 1 : 2
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr)
+      const w = Math.max(1, Math.floor(canvas.clientWidth * dpr))
+      const h = Math.max(1, Math.floor(canvas.clientHeight * dpr))
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w
+        canvas.height = h
+      }
+      gl.viewport(0, 0, canvas.width, canvas.height)
+    }
+
+    const ro = new ResizeObserver(resize)
+    ro.observe(canvas)
+    resize()
+
+    // Pause when off-screen / tab hidden so hero+footer don't burn frames during scroll
+    let visible = true
+    let pageVisible = document.visibilityState !== 'hidden'
+    let raf = 0
+    const start = performance.now()
+
+    const render = (now) => {
+      raf = 0
+      if (!visible || !pageVisible) return
+
+      const p = propsRef.current
+      const t = (now - start) / 1000
+
+      gl.uniform2f(u.res, canvas.width, canvas.height)
+      gl.uniform1f(u.time, t)
+      gl.uniform1f(u.speed, p.speed)
+      gl.uniform1f(u.amp, p.amplitude)
+      gl.uniform1f(u.freq, p.frequency)
+      gl.uniform1f(u.level, p.level)
+      gl.uniform3f(u.color, p.color[0], p.color[1], p.color[2])
+      gl.drawArrays(gl.TRIANGLES, 0, 6)
+
+      raf = requestAnimationFrame(render)
+    }
+
+    const kick = () => {
+      if (visible && pageVisible && !raf) raf = requestAnimationFrame(render)
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting
+        kick()
+      },
+      { rootMargin: '80px' }
+    )
+    io.observe(canvas)
+
+    const onVisibility = () => {
+      pageVisible = document.visibilityState !== 'hidden'
+      kick()
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+
+    raf = requestAnimationFrame(render)
+
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      ro.disconnect()
+      io.disconnect()
+      document.removeEventListener('visibilitychange', onVisibility)
+      gl.deleteBuffer(buffer)
+      gl.deleteProgram(program)
+      gl.deleteShader(vs)
+      gl.deleteShader(fs)
+    }
+  }, [live])
+
+  if (!live) {
+    return (
+      <div
+        aria-hidden="true"
+        className={className}
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#000000',
+          backgroundImage: staticWaveUrl({ frequency, amplitude, level, color }),
+          backgroundSize: '100% 100%',
+          backgroundRepeat: 'no-repeat',
+          ...style,
+        }}
+      />
+    )
+  }
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className={className}
+      style={{
+        display: 'block',
+        width: '100%',
+        height: '100%',
+        background: '#000000',
+        ...style,
+      }}
+    />
+  )
+}

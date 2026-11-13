@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+/* ===== Fonts =====
+   Primary @font-face is inlined in index.html with %BASE_URL% so GitHub Pages
+   (base /bluehawk.com/) and Vercel (/) both resolve. This duplicate covers
+   late CSS-only routes with a root-relative fallback. */
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===== Custom Variables ===== */
+:root {
+  --font-switzer: 'Switzer', system-ui, -apple-system, sans-serif;
+  /* Black base; dark-blue reserved for scroll “via” transitions */
+  --dark-950: #000000;
+  --dark-900: #0a0a0a;
+  --dark-800: #111111;
+  --dark-700: #1a1a1a;
+  --dark-600: #222222;
+  --via-blue: #0A2448;
+  --blue-primary: #1a7af8;
+  --blue-accent: #25A9E0;
+  --blue-glow: #1565d8;
+  --blue-deep: #0a3d8f;
+}
+
+/* ===== Global Styles ===== */
+html {
+  /* Native easing when Lenis is off (touch / reduced-motion). */
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Lenis smooths the real document scroll, so the page keeps native
+   scrolling on touch and only the wheel is eased. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+/* While Lenis runs, kill UA smooth so they don't fight. */
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-switzer);
+  background-color: var(--dark-950);
+  color: #ffffff;
+  /* clip keeps horizontal overflow cut off without breaking position:sticky */
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dark-600);
+  border-radius: 3px;
+}
+
+/* ===== Selection ===== */
+::selection {
+  background: rgba(26, 122, 248, 0.3);
+  color: #ffffff;
+}
+
+/* ===== Buttons: pointer + slight lift (nav / footer excluded) ===== */
+:where(button, [type='button'], [type='submit']):not(:disabled) {
+  cursor: pointer;
+  transition: translate 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:where(button, [type='button'], [type='submit']):not(:disabled):hover {
+  translate: 0 -4px;
+}
+
+/* CTA-style links in page content (not nav/footer) */
+main :where(a.inline-flex, a.flex):is(
+  [class*='rounded-full'],
+  [class*='rounded-[15'],
+  [class*='rounded-[12'],
+  [class*='rounded-[8']
+) {
+  cursor: pointer;
+  transition: translate 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+main :where(a.inline-flex, a.flex):is(
+  [class*='rounded-full'],
+  [class*='rounded-[15'],
+  [class*='rounded-[12'],
+  [class*='rounded-[8']
+):hover {
+  translate: 0 -4px;
+}
+
+nav :where(button, a, [type='button'], [type='submit']),
+nav :where(button, a, [type='button'], [type='submit']):hover,
+footer :where(button, a, [type='button'], [type='submit']),
+footer :where(button, a, [type='button'], [type='submit']):hover,
+.footer :where(button, a, [type='button'], [type='submit']),
+.footer :where(button, a, [type='button'], [type='submit']):hover {
+  translate: none;
+}
+
+/* ===== Marquee Slider ===== */
+@keyframes marquee-slider {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes marquee-slider-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.animate-marquee-slider {
+  animation: marquee-slider 50s linear infinite;
+  will-change: transform;
+}
+.animate-marquee-slider-reverse {
+  animation: marquee-slider-reverse 50s linear infinite;
+  will-change: transform;
+}
+.animate-marquee-slider:hover,
+.animate-marquee-slider-reverse:hover {
+  animation-play-state: paused !important;
+}
+
+/* PageHero accents — CSS only (no GSAP on first paint) */
+@keyframes mc-hero-dot-pulse {
+  0%, 100% { box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.3); }
+  50% { box-shadow: 0 0 20px 5px rgba(26, 122, 248, 0.6); }
+}
+@keyframes mc-hero-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.mc-hero-dot {
+  animation: mc-hero-dot-pulse 1.5s ease-in-out 1.2s infinite;
+}
+.mc-hero-float {
+  animation: mc-hero-float 3s ease-in-out 1.5s infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mc-hero-dot,
+  .mc-hero-float {
+    animation: none;
+  }
+}

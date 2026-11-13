@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BlueHawk — Premium websites for startups, SaaS, AI companies, and ambitious brands ready to scale." />
+    <meta name="theme-color" content="#000000" />
+    <title>BlueHawk</title>
+    <link rel="preload" as="image" href="https://framerusercontent.com/images/66LxVNvsMD3mCk3Ihne7kJh6GQ.png?width=1072&amp;height=800" fetchpriority="high" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/Switzer-Variable.woff2" crossorigin />
+    <style>
+      @font-face {
+        font-family: 'Switzer';
+        src: url('/fonts/Switzer-Variable.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: swap;
+      }
+      html{ scrollbar-gutter: stable; }
+      #lcp-shell{
+        position:fixed; inset:0; z-index:0; pointer-events:none;
+        display:flex; flex-direction:column; justify-content:flex-end;
+        padding:7rem 1.5rem 3rem; box-sizing:border-box;
+        background:#000000; color:#fff;
+        font-family:Switzer,system-ui,-apple-system,sans-serif;
+      }
+      #lcp-shell h1{
+        margin:0; font-weight:600; letter-spacing:-0.04em; line-height:0.9;
+        font-size:min(80vw, 220px); max-width:100%; white-space:nowrap;
+      }
+      #lcp-shell p{
+        margin:1.5rem 0 0; max-width:36rem; font-weight:500; letter-spacing:-1px;
+        font-size:clamp(18px,2.5vw,35px); line-height:1.25; color:rgba(255,255,255,.9);
+      }
+      #lcp-shell .lcp-card{
+        margin-top:2rem; width:162px; height:197px; border-radius:15px; overflow:hidden;
+        flex-shrink:0; background:#0A0A0A;
+      }
+      #lcp-shell .lcp-card img{
+        display:block; width:162px; height:197px; object-fit:cover; border-radius:15px;
+      }
+      #root{ position:relative; z-index:1; min-height:100vh; background:#000000; }
+
+      :root{
+        --bh-light:#25A8DF;
+        --bh-dark:#1B75BB;
+        --bh-bg:radial-gradient(130% 100% at 50% 42%,#123A6B 0%,#000000 70%);
+        --bh-track:rgba(37,168,223,.22);
+        --bh-size:min(190px,42vw);
+        --bh-sp:1;
+      }
+      html.bh-lock{overflow:hidden}
+      html.bh-skip .bh-pre{display:none}
+
+      .bh-pre{
+        position:fixed; inset:0; z-index:2147483000;
+        display:flex; align-items:center; justify-content:center;
+        background:var(--bh-bg);
+        contain:strict;
+        will-change:opacity;
+        transition:opacity .35s cubic-bezier(.4,0,.2,1), visibility 0s .35s;
+      }
+      .bh-pre.is-done{opacity:0; visibility:hidden; pointer-events:none}
+
+      .bh-stage{display:flex; flex-direction:column; align-items:center; gap:26px;
+        transition:transform .35s cubic-bezier(.4,0,.2,1), opacity .35s}
+      .bh-pre.is-done .bh-stage{transform:scale(1.04); opacity:0}
+
+      .bh-float{position:relative; width:var(--bh-size); height:calc(var(--bh-size) * 0.7);
+        display:flex; align-items:center; justify-content:center;
+        will-change:transform}
+      .bh-mark{
+        width:100%; height:100%; object-fit:contain;
+        filter:drop-shadow(0 0 28px rgba(37,168,223,.35));
+        animation:bhPulse calc(1600ms*var(--bh-sp)) ease-in-out infinite;
+      }
+      @keyframes bhPulse{
+        0%,100%{transform:scale(1); opacity:1}
+        50%{transform:scale(1.04); opacity:.92}
+      }
+
+      @keyframes bhFloat{0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)}}
+      .bh-float{animation:bhFloat 3.6s ease-in-out calc(400ms*var(--bh-sp)) infinite}
+
+      .bh-rail{position:relative; width:78px; height:2px; border-radius:2px; overflow:hidden;
+        background:var(--bh-track);
+        animation:bhFadeIn calc(400ms*var(--bh-sp)) ease calc(200ms*var(--bh-sp)) both}
+      .bh-rail i{position:absolute; top:0; bottom:0; left:0; width:42%; border-radius:2px;
+        background:var(--bh-light); will-change:transform;
+        animation:bhRail calc(1350ms*var(--bh-sp)) cubic-bezier(.65,0,.35,1) calc(300ms*var(--bh-sp)) infinite}
+      @keyframes bhRail{from{transform:translateX(-115%)} to{transform:translateX(255%)}}
+      @keyframes bhFadeIn{from{opacity:0} to{opacity:1}}
+
+      @media (prefers-reduced-motion:reduce){
+        .bh-mark,.bh-float,.bh-rail i{animation:none}
+        .bh-rail i{width:100%}
+        .bh-stage{animation:bhFadeIn .35s ease both}
+      }
+    </style>
+    <script>
+      window.__BH_LOADER_EVERY_VISIT__ = true;
+      (function(){
+        try {
+          if (!window.__BH_LOADER_EVERY_VISIT__ && sessionStorage.getItem('bhSeen')) {
+            document.documentElement.classList.add('bh-skip');
+            return;
+          }
+        } catch (e) {}
+        document.documentElement.classList.add('bh-lock');
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="bh-pre" id="bhPre" role="status" aria-live="polite" aria-label="Loading BlueHawk">
+      <div class="bh-stage">
+        <div class="bh-float">
+          <img class="bh-mark" src="/logo.png" width="352" height="242" alt="BlueHawk" decoding="async" />
+        </div>
+        <div class="bh-rail"><i></i></div>
+      </div>
+    </div>
+    <div id="lcp-shell" aria-hidden="true">
+      <h1>BlueHawk</h1>
+      <p>Your Website Should Close Deals While You Sleep.</p>
+      <div class="lcp-card">
+        <img
+          id="lcp-hero-img"
+          src="https://framerusercontent.com/images/66LxVNvsMD3mCk3Ihne7kJh6GQ.png?width=1072&amp;height=800"
+          width="162"
+          height="197"
+          alt=""
+          fetchpriority="high"
+          decoding="sync"
+        />
+      </div>
+    </div>
+    <script>
+    (function(){
+      var pre  = document.getElementById('bhPre');
+      var root = document.documentElement;
+      if (!pre || root.classList.contains('bh-skip')) {
+        try { sessionStorage.setItem('bhSeen', '1'); } catch (e) {}
+        return;
+      }
+
+      var start = Date.now();
+      var MIN_SHOW = 500;
+      var HARD_CAP = 1200;
+      var fired = false;
+      var heroReady = false;
+      var reactReady = false;
+
+      function tryHide(){
+        if (fired) return;
+        var elapsed = Date.now() - start;
+        var contentOk = heroReady || reactReady || elapsed >= HARD_CAP;
+        if (!contentOk) return;
+        if (elapsed < MIN_SHOW) {
+          setTimeout(tryHide, MIN_SHOW - elapsed);
+          return;
+        }
+
+        fired = true;
+        pre.classList.add('is-done');
+        root.classList.remove('bh-lock');
+        try { sessionStorage.setItem('bhSeen', '1'); } catch (e) {}
+        setTimeout(function(){ if (pre.parentNode) pre.remove(); }, 350);
+      }
+
+      window.hideBlueHawkLoader = function(){
+        reactReady = true;
+        tryHide();
+      };
+
+      var img = document.getElementById('lcp-hero-img');
+      function markHero(){ heroReady = true; tryHide(); }
+      if (img) {
+        if (img.complete && img.naturalWidth) markHero();
+        else if (img.decode) {
+          img.decode().then(markHero).catch(markHero);
+        } else {
+          img.addEventListener('load', markHero, { once: true });
+          img.addEventListener('error', markHero, { once: true });
+        }
+      } else {
+        heroReady = true;
+      }
+
+      setTimeout(tryHide, HARD_CAP);
+    })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

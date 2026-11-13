@@ -1,0 +1,41 @@
+/* Footer.css - BlueWaves WebGL background + gradient overlay */
+
+.footer-bg {
+  position: relative;
+  background-color: #000000;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.footer-bg__waves {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Dark gradient overlay — sits ABOVE the waves and ABOVE the BlueHawk text */
+.footer-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #000000 0%, rgba(10, 36, 72, 0.75) 45%, rgba(0, 0, 0, 0.9) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Footer content (links, heading, CTA) sits above the gradient */
+.footer-bg .footer__inner {
+  position: relative;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+/* BlueHawk text sits above the overlay, below footer content */
+.footer-bg .footer__brand-wrap {
+  position: relative;
+  z-index: 2; /* above the overlay (1), below the content (5) */
+  pointer-events: none;
+  line-height: 0;
+}

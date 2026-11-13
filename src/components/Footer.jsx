@@ -1,0 +1,345 @@
+import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import BlueHawkText from "./BlueHawkText";
+
+import "../App.css";
+import "./Footer.css";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const EXPLORE_LINKS = [
+  { label: "Home", to: "/" },
+  { label: "Projects", to: "/portfolio" },
+  { label: "Pricing", to: "/#pricing" },
+  { label: "FAQ", to: "/#faq" },
+];
+
+
+const SocialIcon = ({ name }) => {
+  const common = {
+    width: 20,
+    height: 20,
+    viewBox: "0 0 24 24",
+    "aria-hidden": true,
+    className: "footer__social-icon",
+  };
+
+  if (name === "instagram") {
+    return (
+      <svg {...common} fill="currentColor">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+      </svg>
+    );
+  }
+
+  if (name === "linkedin") {
+    return (
+      <svg {...common} fill="currentColor">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </svg>
+    );
+  }
+
+  // facebook
+  return (
+    <svg {...common} fill="currentColor">
+      <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.43c0-3.007 1.792-4.668 4.533-4.668 1.312 0 2.686.234 2.686.234v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
+    </svg>
+  );
+};
+
+const COMPANY_DECK_URL =
+  "https://framerusercontent.com/assets/vAFpT3ed3caxwxbB9bSSpNE4J0.pdf";
+
+const SOCIAL_LINKS = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/blue-hawke/",
+    icon: "linkedin",
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/p/Blue-Hawke-100091523956057/",
+    icon: "facebook",
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/bluehawke.digital/",
+    icon: "instagram",
+  },
+];
+
+const HEADING_LINES = [
+  "Design for those who want to",
+  "become a better version of",
+  "themselves.",
+];
+
+const Footer = () => {
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      const lines = root.querySelectorAll(".js-line");
+      const cta = root.querySelectorAll(".js-cta");
+      const cols = root.querySelectorAll(".js-col");
+      const brand = root.querySelectorAll(".js-brand");
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const tl = gsap.timeline({
+          // No explicit scroller: inherit ScrollTrigger.defaults, which is the
+          // Locomotive container on desktop and the window on touch devices.
+          scrollTrigger: {
+            trigger: root,
+            start: "top 85%",
+            once: true,
+          },
+          defaults: { ease: "power3.out" },
+        });
+
+        if (lines.length) {
+          tl.fromTo(
+            lines,
+            { yPercent: 115, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.09 }
+          );
+        }
+        if (cta.length) {
+          tl.fromTo(
+            cta,
+            { y: 18, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+            "-=0.55"
+          );
+        }
+        if (cols.length) {
+          tl.fromTo(
+            cols,
+            { y: 22, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.1 },
+            "-=0.5"
+          );
+        }
+        if (brand.length) {
+          tl.fromTo(
+            brand,
+            { opacity: 0, y: 40 },
+            { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
+            "-=0.35"
+          );
+        }
+      });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <footer ref={rootRef} className="footer footer-bg">
+      <div className="footer-bg__waves" aria-hidden="true">
+        {/* <BlueWaves color={[0.0, 0.37, 0.97]} level={0.38} amplitude={0.08} /> */}
+      </div>
+      <div className="footer__inner mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] pt-8 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-20">
+        <div className="footer__top flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
+          <div className="footer__intro max-w-md">
+            <h2
+              className="footer__heading font-medium text-white"
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontSize: 'clamp(22px, 3.5vw, 35px)',
+                lineHeight: 'clamp(26px, 4vw, 39px)',
+                letterSpacing: '-1px',
+              }}
+            >
+              {HEADING_LINES.map((line) => (
+                <span className="footer__line-mask" key={line}>
+                  <span className="js-line footer__line">{line}</span>
+                </span>
+              ))}
+            </h2>
+
+            <div className="js-cta mt-8 sm:mt-14 lg:mt-20 flex flex-row flex-wrap items-center gap-4 sm:gap-5">
+              <a
+                href="https://calendly.com/saarang-bluehawk/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2.5 px-7 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl group cursor-pointer rounded-[2rem]"
+                style={{
+                  height: '52.88px',
+                  background: '#25A9E0',
+                  boxShadow: '0 4px 20px rgba(37, 169, 224, 0.3)',
+                  fontFamily: 'Switzer, sans-serif',
+                  fontWeight: 500,
+                  fontSize: '18px',
+                  lineHeight: '30px',
+                  letterSpacing: '-0.5px',
+                  textDecoration: 'none',
+                }}
+              >
+                <svg
+                  width="19.08"
+                  height="19.08"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="flex-shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                >
+                  <path
+                    d="M7 17L17 7M17 7H7M17 7V17"
+                    stroke="white"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span>Contact</span>
+              </a>
+
+              <a
+                href={COMPANY_DECK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 no-underline group h-[52.88px]"
+                aria-label="Company deck — PDF, 3MB"
+              >
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-all duration-300 group-hover:border-[#25A9E0]/60 group-hover:bg-[#25A9E0]/15 group-hover:scale-105">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span className="flex flex-col items-start justify-center gap-0.5">
+                  <span
+                    className="text-white text-[15px] sm:text-[16px] font-medium tracking-tight leading-none"
+                    style={{ fontFamily: 'Switzer, sans-serif' }}
+                  >
+                    Company Deck
+                  </span>
+                  <span
+                    className="text-white/55 text-[12px] sm:text-[13px] font-medium leading-none mt-1"
+                    style={{ fontFamily: 'Switzer, sans-serif' }}
+                  >
+                    PDF, 3MB
+                  </span>
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <nav
+            className="footer__columns flex flex-col sm:flex-row flex-wrap gap-10 sm:gap-16 lg:gap-24"
+            aria-label="Footer"
+          >
+            <div className="js-col footer__col">
+              <h3 className="footer__col-title">Explore</h3>
+              <ul>
+                {EXPLORE_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <Link to={link.to} className="footer__link">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="js-col footer__col">
+              <h3 className="footer__col-title">Socials</h3>
+              <ul>
+                {SOCIAL_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`footer__link footer__social-link footer__social-link--${link.icon}`}
+                    >
+                      <SocialIcon name={link.icon} />
+                      <span>{link.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="js-col footer__col max-w-[280px]">
+              <h3 className="footer__col-title">Contact</h3>
+              <ul>
+                <li>
+                  <a
+                    href="tel:+447426431535"
+                    className="footer__link footer__social-link footer__contact-link--phone"
+                  >
+                    <svg
+                      className="footer__social-icon"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M6.62 10.79a15.15 15.15 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z" />
+                    </svg>
+                    <span>+44 7426 431535</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="mailto:info@bluehawk.com"
+                    className="footer__link footer__social-link footer__contact-link--mail"
+                  >
+                    <svg
+                      className="footer__social-icon"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
+                    </svg>
+                    <span>info@bluehawk.com</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      {/* Full-bleed legal bar */}
+      <hr className="footer__legal-hr" aria-hidden="true" />
+      <div className="footer__legal relative z-[5]">
+        <div className="mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] py-5 sm:py-6 flex flex-row flex-wrap items-center justify-between gap-x-6 gap-y-3">
+          <p className="footer__legal-copy m-0 text-[11px] sm:text-xs md:text-sm font-medium tracking-tight text-white/70 whitespace-nowrap">
+            Copyright © 2026 BlueHawk Pvt Ltd. All rights reserved.
+          </p>
+        </div>
+      </div>
+
+      <div className="js-brand footer__brand-wrap">
+        <BlueHawkText />
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
