@@ -146,8 +146,8 @@ const Footer = () => {
         {/* <BlueWaves color={[0.0, 0.37, 0.97]} level={0.38} amplitude={0.08} /> */}
       </div>
       <div className="footer__inner mx-auto w-[90%] sm:w-[92%] lg:w-[95%] max-w-[1440px] pt-8 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-20">
-        <div className="footer__top flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
-          <div className="footer__intro max-w-md">
+        <div className="footer__top flex flex-col gap-10 sm:gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
+          <div className="footer__intro max-w-md w-full">
             <h2
               className="footer__heading font-medium text-white"
               style={{
@@ -166,7 +166,7 @@ const Footer = () => {
 
             <div className="js-cta mt-8 sm:mt-14 lg:mt-20 flex flex-row flex-wrap items-center gap-4 sm:gap-5">
               <a
-                href="https://calendly.com/saarang-bluehawk/30min"
+                href="https://cal.com/blue-hawke/30min"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2.5 px-7 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl group cursor-pointer rounded-[2rem]"
@@ -245,10 +245,10 @@ const Footer = () => {
           </div>
 
           <nav
-            className="footer__columns flex flex-col sm:flex-row flex-wrap gap-10 sm:gap-16 lg:gap-24"
+            className="footer__columns grid grid-cols-2 gap-x-6 gap-y-8 sm:flex sm:flex-row sm:flex-wrap sm:gap-16 lg:gap-24"
             aria-label="Footer"
           >
-            <div className="js-col footer__col">
+            <div className="js-col footer__col min-w-0">
               <h3 className="footer__col-title">Explore</h3>
               <ul>
                 {EXPLORE_LINKS.map((link) => (
@@ -261,7 +261,7 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div className="js-col footer__col">
+            <div className="js-col footer__col min-w-0">
               <h3 className="footer__col-title">Socials</h3>
               <ul>
                 {SOCIAL_LINKS.map((link) => (
@@ -280,7 +280,7 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div className="js-col footer__col max-w-[280px]">
+            <div className="js-col footer__col col-span-2 sm:col-auto sm:max-w-[280px] min-w-0">
               <h3 className="footer__col-title">Contact</h3>
               <ul>
                 <li>

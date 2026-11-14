@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { label: 'FAQ', to: '/#faq' },
 ];
 
-const CALENDLY_URL = '#contact';
+const CALENDLY_URL = 'https://cal.com/blue-hawke/30min';
 
 const ArrowIcon = () => (
   <svg
@@ -234,6 +234,8 @@ const Navbar = () => {
               <StarBorder
                 as="a"
                 href={CALENDLY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 theme="dark"
                 radius={999}
                 thickness={1}
@@ -321,6 +323,8 @@ const Navbar = () => {
           <StarBorder
             as="a"
             href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             theme="dark"
             radius={999}
             thickness={1}

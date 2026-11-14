@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import TrustedBy from './TrustedBy';
@@ -138,9 +137,8 @@ const AboutAndVideo = () => {
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16">
         {/* (All Work) Label */}
         <div className="w-full text-center mb-8 sm:mb-10 md:mb-14">
-          <Link
-            to="/portfolio"
-            className="group inline-flex items-center gap-[0.12em] text-[#25A9E0] transition-transform duration-300 hover:scale-95 cursor-pointer pb-[0.1em] no-underline"
+          <h2
+            className="inline-block m-0 text-[#25A9E0] cursor-default pb-[0.1em]"
             style={{
               fontFamily: 'Switzer, sans-serif',
               fontWeight: 500,
@@ -154,25 +152,8 @@ const AboutAndVideo = () => {
               backgroundSize: '100% 3.5px',
             }}
           >
-            <span>Our Work</span>
-            <svg
-              width="1em"
-              height="1em"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              className="shrink-0 translate-y-[-0.06em] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-1"
-            >
-              <path
-                d="M7 17L17 7M17 7H7M17 7V17"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </Link>
+            Our Portfolio
+          </h2>
         </div>
       </div>
 
@@ -216,7 +197,7 @@ const AboutAndVideo = () => {
             {/* Figma Pixel-Perfect Button */}
             <div>
               <a
-                href="https://calendly.com/saarang-bluehawk/30min"
+                href="https://cal.com/blue-hawke/30min"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center justify-center gap-2.5 rounded-[15px] text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl cursor-pointer no-underline"

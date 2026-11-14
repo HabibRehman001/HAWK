@@ -295,7 +295,7 @@ const TeamSection = ({ roundedTop = false }) => {
       data-snap-section
       className={`relative w-full pt-5 pb-12 md:py-32 md:mt-5 ${roundedTop ? 'rounded-t-[40px] md:rounded-t-[80px]' : ''}`}
       style={{
-        backgroundColor: '#000000',
+        backgroundColor: '#040617',
         zIndex: roundedTop ? 20 : 1,
       }}
     >

@@ -2,7 +2,7 @@
 
 .footer-bg {
   position: relative;
-  background-color: #000000;
+  background-color: #040617;
   overflow-x: hidden;
   overflow-y: visible;
 }
@@ -20,7 +20,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #000000 0%, rgba(10, 36, 72, 0.75) 45%, rgba(0, 0, 0, 0.9) 100%);
+  background: linear-gradient(180deg, #040617 0%, rgba(10, 36, 72, 0.75) 45%, rgba(4, 6, 23, 0.95) 100%);
   pointer-events: none;
   z-index: 1;
 }

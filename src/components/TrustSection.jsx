@@ -74,7 +74,7 @@ const TrustSection = () => {
   return (
     <section
       data-snap-section
-      className="relative w-full max-w-[100%] overflow-x-clip bg-black text-white px-4 sm:px-6 md:px-10 lg:px-16 pt-16 pb-10 sm:pt-24 sm:pb-16"
+      className="relative w-full max-w-[100%] overflow-x-clip bg-[#040617] text-white px-4 sm:px-6 md:px-10 lg:px-16 pt-16 pb-10 sm:pt-24 sm:pb-16"
     >
       <div className="max-w-[1200px] mx-auto w-full mb-8 sm:mb-12">
         <p

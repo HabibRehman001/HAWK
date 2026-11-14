@@ -1,10 +1,11 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import DocumentTitle from './components/DocumentTitle'
 import ScrollToTopButton from './components/ScrollToTopButton'
 import { setLenis, getLenis } from './lib/scrollBus'
 import { initSectionSnap, shouldEnableSectionSnap } from './lib/magneticSnap'
-import Home from './pages/Home'
+
+const Home = lazy(() => import('./pages/Home'))
 
 function goToPageTop() {
   const page = document.querySelector('.page-top')

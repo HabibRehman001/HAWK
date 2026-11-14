@@ -1,5 +1,4 @@
 import PageHero, { HERO_SECTION_CLASS, HERO_INNER_CLASS } from './landing/PageHero';
-import { Link } from 'react-router-dom';
 import { lazy, Suspense, useEffect, useState } from 'react';
 
 import { IMG } from '../lib/unsplash';
@@ -75,8 +74,10 @@ const HeroSection = ({ heroImageRef }) => {
           className="md:flex-1"
           subtitle="Your Website Should Close Deals While You Sleep."
         >
-          <Link
-            to="/portfolio"
+          <a
+            href="https://cal.com/blue-hawke/30min"
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-full max-w-[430.82px] h-[216.86px] rounded-[15px] p-[10px] relative overflow-hidden group cursor-pointer flex flex-row items-stretch no-underline"
             style={{
               width: '430.82px',
@@ -184,7 +185,7 @@ const HeroSection = ({ heroImageRef }) => {
                 }}
               />
             </div>
-          </Link>
+          </a>
         </PageHero>
       </div>
 

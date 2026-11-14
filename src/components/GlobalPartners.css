@@ -1,0 +1,179 @@
+.gp {
+  --bg: #040617;
+  --panel: #050a24;
+  --blue: #1e8fff;
+  --ice: #cfe6ff;
+  --muted: #9fc4ee;
+  background: var(--bg);
+  color: var(--ice);
+  padding: 56px 20px 72px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Title: ice-blue with a slow light sweep */
+.gp-title {
+  margin: 0;
+  font-size: clamp(56px, 13vw, 190px);
+  line-height: 0.95;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(100deg, #cfe6ff 35%, #ffffff 50%, #cfe6ff 65%) 200% 0 / 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gp-sweep 7s ease-in-out infinite;
+}
+@keyframes gp-sweep {
+  0%, 30% { background-position: 200% 0; }
+  70%, 100% { background-position: -100% 0; }
+}
+
+.gp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 0;
+  color: #1a8fe0;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.gp-headline {
+  margin: 6px 0 0;
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.gp-sub {
+  margin: 8px auto 30px;
+  max-width: 640px;
+  font-size: 15px;
+  color: var(--ice);
+}
+
+/* Panel */
+.gp-panel {
+  position: relative;
+  width: 70vw;
+  max-width: none;
+  margin: 0 auto;
+  border: none;
+  border-radius: 12px;
+  background: radial-gradient(120% 140% at 50% 0%, #07123a 0%, var(--panel) 60%);
+  box-shadow: none;
+  animation: none;
+}
+.gp-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.gp-grid {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: calc(26px * 1.1) 12px calc(28px * 1.1);
+  min-height: calc(180px * 1.1);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+.gp-card h4 {
+  margin: 14px 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.gp-card p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--ice);
+}
+
+/* Flag + orbit rings */
+.gp-flag {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  will-change: transform;
+}
+.gp-flag img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(160, 205, 255, 0.55);
+  box-shadow: 0 0 18px rgba(30, 143, 255, 0.45);
+}
+.gp-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.gp-ring--a {
+  inset: -9px;
+  border: 1px dashed rgba(110, 185, 255, 0.55);
+  animation: gp-spin 14s linear infinite;
+}
+.gp-ring--a::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #8fd0ff;
+  box-shadow: 0 0 10px #4db3ff;
+}
+.gp-ring--b {
+  inset: -17px;
+  border: 1px dotted rgba(110, 185, 255, 0.3);
+  animation: gp-spin 22s linear infinite reverse;
+}
+.gp-ring--b::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: #5aa9ff;
+}
+.gp-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(90, 175, 255, 0.8);
+  animation: gp-ping 3s ease-out infinite;
+}
+.gp-card:nth-child(2) .gp-ping { animation-delay: 0.75s; }
+.gp-card:nth-child(3) .gp-ping { animation-delay: 1.5s; }
+.gp-card:nth-child(4) .gp-ping { animation-delay: 2.25s; }
+
+.gp-card:hover .gp-flag { transform: scale(1.1); }
+.gp-card:hover .gp-ring--a { animation-duration: 4s; }
+
+@keyframes gp-spin { to { transform: rotate(360deg); } }
+@keyframes gp-ping {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(2.1); opacity: 0; }
+}
+
+@media (max-width: 720px) {
+  .gp-grid { grid-template-columns: repeat(2, 1fr); row-gap: 34px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gp-title, .gp-panel, .gp-ring, .gp-ping { animation: none; }
+}

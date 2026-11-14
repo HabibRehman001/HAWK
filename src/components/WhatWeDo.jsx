@@ -173,7 +173,7 @@ const WhatWeDo = () => {
       data-snap-section
       className="relative w-full overflow-hidden"
       style={{
-        backgroundColor: '#000000',
+        backgroundColor: '#040617',
         borderRadius: '40px 40px 0 0',
         marginTop: 10,
         zIndex: 30,
