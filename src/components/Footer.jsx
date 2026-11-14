@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MapPin } from "lucide-react";
 import BlueHawkText from "./BlueHawkText";
 
 import "../App.css";
@@ -14,6 +15,11 @@ const EXPLORE_LINKS = [
   { label: "Projects", to: "/portfolio" },
   { label: "Pricing", to: "/#pricing" },
   { label: "FAQ", to: "/#faq" },
+];
+
+const LEGAL_LINKS = [
+  { label: "Terms & Conditions", to: "/terms-&-conditions" },
+  { label: "Privacy Policy", to: "/privacy" },
 ];
 
 
@@ -52,6 +58,11 @@ const SocialIcon = ({ name }) => {
 
 const COMPANY_DECK_URL =
   "https://framerusercontent.com/assets/vAFpT3ed3caxwxbB9bSSpNE4J0.pdf";
+
+const MAPS_URL =
+  "https://www.google.com/maps/place/2300+Yonge+St,+Toronto,+ON+M4P+1E4,+Canada/@43.7072921,-79.4021398,17z/data=!3m1!4b1!4m6!3m5!1s0x882b353cbf566647:0x2ce62dff5474f3bb!8m2!3d43.7074185!4d-79.3996975!16s%2Fg%2F11w3m1jds_?entry=ttu&g_ep=EgoyMDI2MTExMC4wIKXMDSoASAFQAw%3D%3D";
+
+const OFFICE_ADDRESS = "2300 Yonge St, Toronto, ON M4P 1E4, Canada";
 
 const SOCIAL_LINKS = [
   {
@@ -165,10 +176,8 @@ const Footer = () => {
             </h2>
 
             <div className="js-cta mt-8 sm:mt-14 lg:mt-20 flex flex-row flex-wrap items-center gap-4 sm:gap-5">
-              <a
-                href="https://cal.com/blue-hawke/30min"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to="/contact"
                 className="inline-flex items-center justify-center gap-2.5 px-7 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl group cursor-pointer rounded-[2rem]"
                 style={{
                   height: '52.88px',
@@ -199,7 +208,7 @@ const Footer = () => {
                   />
                 </svg>
                 <span>Contact</span>
-              </a>
+              </Link>
 
               <a
                 href={COMPANY_DECK_URL}
@@ -280,9 +289,26 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div className="js-col footer__col col-span-2 sm:col-auto sm:max-w-[280px] min-w-0">
+            <div className="js-col footer__col col-span-2 sm:col-auto sm:max-w-[320px] min-w-0">
               <h3 className="footer__col-title">Contact</h3>
               <ul>
+                <li>
+                  <a
+                    href={MAPS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer__link footer__social-link footer__contact-link--address"
+                    aria-label="Open BlueHawk address on Google Maps"
+                  >
+                    <MapPin
+                      className="footer__social-icon"
+                      size={20}
+                      strokeWidth={2}
+                      aria-hidden="true"
+                    />
+                    <span>{OFFICE_ADDRESS}</span>
+                  </a>
+                </li>
                 <li>
                   <a
                     href="tel:+447426431535"
@@ -332,6 +358,13 @@ const Footer = () => {
           <p className="footer__legal-copy m-0 text-[11px] sm:text-xs md:text-sm font-medium tracking-tight text-white/70 whitespace-nowrap">
             Copyright © 2026 BlueHawk Pvt Ltd. All rights reserved.
           </p>
+          <div className="flex flex-row flex-wrap items-center gap-x-6 sm:gap-x-8">
+            {LEGAL_LINKS.map((link) => (
+              <Link key={link.to} to={link.to} className="footer__legal-link">
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 

@@ -131,80 +131,73 @@ const WorkGrid = ({ heroImageRef }) => {
       {/* 2x2 Feature Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 justify-items-center">
 
-        {/* Card 1 (Top Left) - Vantage - Blank initially, image lands here on scroll */}
-        <a
+        {/* Card 1 — Bluesio */}
+        <Link
           ref={card1Ref}
-          href="https://vantage-contractors.com/"
-          target="_blank"
-          rel="noopener noreferrer"
+          to="/projects/bluesio"
           className="w-[90%] max-w-[595px] h-[468px] sm:h-[585px] lg:h-[724px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
-          {/* This image shows ONLY when morph is complete */}
           <img
             ref={card1ImageRef}
             src={heroCardImg}
             srcSet={heroCardSrcSet}
             sizes="(min-width: 768px) 45vw, 90vw"
-            alt="The Studio Next Town — Branding, Website Design"
+            alt="Bluesio — Corporate Website"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             style={{ opacity: morphComplete ? 1 : 0 }}
           />
-        </a>
+        </Link>
 
-        {/* Card 2 (Top Right) - Sauced */}
-        <a
+        {/* Card 2 — The Mindful Sleep Coach */}
+        <Link
           ref={card2Ref}
-          href="https://play.google.com/store/apps/details?id=com.sauced&pcampaignid=web_share"
-          target="_blank"
-          rel="noopener noreferrer"
+          to="/projects/mindful-sleep-coach"
           className="w-[90%] max-w-[595px] h-[468px] sm:h-[585px] lg:h-[724px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
           <img
             src={saucedImg}
             srcSet={saucedSrcSet}
             sizes="(min-width: 768px) 45vw, 90vw"
-            alt="Shore — Website Design, Content Strategy"
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        </a>
-
-        {/* Card 3 (Bottom Left) - Jersey / Shareable vCard Platform */}
-        <Link
-          ref={card3Ref}
-          to="/case-studies"
-          className="w-[90%] max-w-[595px] h-[468px] sm:h-[585px] lg:h-[724px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
-        >
-          <img
-            src={jerseyImg}
-            srcSet={jerseySrcSet}
-            sizes="(min-width: 768px) 45vw, 90vw"
-            alt="Aria Power — Fintech, Web App"
+            alt="The Mindful Sleep Coach — Website Design"
             loading="lazy"
             decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </Link>
 
-        {/* Card 4 (Bottom Right) - The Jersey Generator */}
-        <a
+        {/* Card 3 — HelloX */}
+        <Link
+          ref={card3Ref}
+          to="/projects/hellox"
+          className="w-[90%] max-w-[595px] h-[468px] sm:h-[585px] lg:h-[724px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
+        >
+          <img
+            src={jerseyImg}
+            srcSet={jerseySrcSet}
+            sizes="(min-width: 768px) 45vw, 90vw"
+            alt="HelloX Website — Design & Dev"
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        </Link>
+
+        {/* Card 4 — Grid Travel */}
+        <Link
           ref={card4Ref}
-          href="https://thejerseygenerator.com/"
-          target="_blank"
-          rel="noopener noreferrer"
+          to="/projects/grid-travel"
           className="w-[90%] max-w-[595px] h-[468px] sm:h-[585px] lg:h-[724px] rounded-[32px] relative overflow-hidden group cursor-pointer bg-[#0A0D14] will-change-transform origin-center block no-underline"
         >
           <img
             src={jersey2Img}
             srcSet={jersey2SrcSet}
             sizes="(min-width: 768px) 45vw, 90vw"
-            alt="Loom Network — Crypto, Brand"
+            alt="Grid Travel — Travel App"
             loading="lazy"
             decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-        </a>
+        </Link>
 
       </div>
     </section>

@@ -76,7 +76,7 @@ const ToolsSection = () => {
     <section
       ref={sectionRef}
       data-snap-section
-      className="relative w-full py-10 md:py-32"
+      className="relative w-full py-10 md:pt-32 md:pb-10"
       style={{ backgroundColor: '#040617' }}
     >
       <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-12">

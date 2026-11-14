@@ -6,6 +6,10 @@ import { setLenis, getLenis } from './lib/scrollBus'
 import { initSectionSnap, shouldEnableSectionSnap } from './lib/magneticSnap'
 
 const Home = lazy(() => import('./pages/Home'))
+const Privacy = lazy(() => import('./pages/Privacy'))
+const Terms = lazy(() => import('./pages/Terms'))
+const Contact = lazy(() => import('./pages/Contact'))
+const Project = lazy(() => import('./pages/Project'))
 
 function goToPageTop() {
   const page = document.querySelector('.page-top')
@@ -138,6 +142,10 @@ function AppTree({ smooth }) {
       >
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/projects/:slug" element={<Project />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms-&-conditions" element={<Terms />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>

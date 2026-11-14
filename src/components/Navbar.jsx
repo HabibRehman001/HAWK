@@ -1,12 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 import LOGO_SRC from '../assets/logo.png';
 import { getScrollY, getLenis, subscribeScroll } from '../lib/scrollBus';
+import { PROJECT_ORDER, PROJECTS } from '../data/projects';
 import StarBorder from './StarBorder';
 
+const PROJECT_LINKS = PROJECT_ORDER.map((slug) => ({
+  label: PROJECTS[slug].title,
+  to: `/projects/${slug}`,
+}));
+
 const NAV_LINKS = [
-  { label: 'Projects', to: '/portfolio' },
+  { label: 'Projects', dropdown: PROJECT_LINKS },
   { label: 'Pricing', to: '/#pricing' },
   { label: 'FAQ', to: '/#faq' },
 ];
@@ -37,8 +44,11 @@ const Navbar = () => {
   const location = useLocation();
   const menuBtnRef = useRef(null);
   const mobilePanelRef = useRef(null);
+  const projectsDesktopRef = useRef(null);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [projectsOpen, setProjectsOpen] = useState(false);
+  const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
 
   const releaseMenuFocus = () => {
     const panel = mobilePanelRef.current;
@@ -52,7 +62,26 @@ const Navbar = () => {
   useEffect(() => {
     releaseMenuFocus();
     setMenuOpen(false);
+    setProjectsOpen(false);
+    setMobileProjectsOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!projectsOpen) return undefined;
+    const onPointerDown = (e) => {
+      if (projectsDesktopRef.current?.contains(e.target)) return;
+      setProjectsOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === 'Escape') setProjectsOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [projectsOpen]);
 
   useEffect(() => {
     if (!menuOpen) releaseMenuFocus();
@@ -171,9 +200,14 @@ const Navbar = () => {
     location.pathname === to ||
     (to !== '/' && !to.includes('#') && location.pathname.startsWith(to));
 
+  const isProjectsActive =
+    location.pathname.startsWith('/projects/') || location.hash === '#work-grid';
+
   const closeMenu = () => {
     releaseMenuFocus();
     setMenuOpen(false);
+    setProjectsOpen(false);
+    setMobileProjectsOpen(false);
   };
   const toggleMenu = () => {
     setMenuOpen((open) => {
@@ -215,19 +249,77 @@ const Navbar = () => {
             </Link>
 
             <div className="hidden xl:flex items-center justify-evenly flex-1 min-w-0 px-6 2xl:px-10">
-              {NAV_LINKS.map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.to}
-                  className={`text-[13px] 2xl:text-[15px] font-medium tracking-wide whitespace-nowrap no-underline transition-colors duration-300 shrink-0 px-1 ${
-                    isActive(item.to)
-                      ? 'text-white'
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {NAV_LINKS.map((item) =>
+                item.dropdown ? (
+                  <div
+                    key={item.label}
+                    ref={projectsDesktopRef}
+                    className="relative shrink-0"
+                    onMouseEnter={() => setProjectsOpen(true)}
+                    onMouseLeave={() => setProjectsOpen(false)}
+                  >
+                    <button
+                      type="button"
+                      className={`inline-flex items-center gap-1 text-[13px] 2xl:text-[15px] font-medium tracking-wide whitespace-nowrap transition-colors duration-300 px-1 bg-transparent border-none cursor-pointer ${
+                        isProjectsActive || projectsOpen
+                          ? 'text-white'
+                          : 'text-white/70 hover:text-white'
+                      }`}
+                      aria-expanded={projectsOpen}
+                      aria-haspopup="menu"
+                      onClick={() => setProjectsOpen((o) => !o)}
+                    >
+                      {item.label}
+                      <ChevronDown
+                        size={14}
+                        className={`transition-transform duration-200 ${projectsOpen ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+
+                    <div
+                      className={`absolute left-1/2 top-full z-[70] w-[240px] -translate-x-1/2 pt-2 transition-[opacity,visibility] duration-200 ${
+                        projectsOpen
+                          ? 'visible opacity-100 pointer-events-auto'
+                          : 'invisible opacity-0 pointer-events-none'
+                      }`}
+                    >
+                      <div
+                        role="menu"
+                        className="rounded-2xl border border-white/10 p-1.5 shadow-[0_16px_40px_rgba(0,0,0,0.45)]"
+                        style={{ background: 'rgba(10, 36, 72, 0.98)' }}
+                      >
+                        {item.dropdown.map((project) => (
+                          <Link
+                            key={project.to}
+                            to={project.to}
+                            role="menuitem"
+                            className={`block rounded-xl px-3.5 py-2.5 text-[13px] font-medium no-underline transition-colors ${
+                              location.pathname === project.to
+                                ? 'bg-white/10 text-white'
+                                : 'text-white/75 hover:bg-white/8 hover:text-white'
+                            }`}
+                            onClick={() => setProjectsOpen(false)}
+                          >
+                            {project.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    key={item.label}
+                    to={item.to}
+                    className={`text-[13px] 2xl:text-[15px] font-medium tracking-wide whitespace-nowrap no-underline transition-colors duration-300 shrink-0 px-1 ${
+                      isActive(item.to)
+                        ? 'text-white'
+                        : 'text-white/70 hover:text-white'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
             </div>
 
             <div className="hidden xl:block shrink-0">
@@ -307,15 +399,62 @@ const Navbar = () => {
                 }`}
                 style={{ transitionDelay: menuOpen ? `${80 + i * 55}ms` : '0ms' }}
               >
-                <Link
-                  to={item.to}
-                  className={`block py-3.5 sm:py-4 text-[clamp(1.6rem,7vw,2.5rem)] font-semibold leading-none tracking-tight no-underline transition-colors duration-300 ${
-                    isActive(item.to) ? 'text-white' : 'text-white/55 hover:text-white'
-                  }`}
-                  onClick={closeMenu}
-                >
-                  {item.label}
-                </Link>
+                {item.dropdown ? (
+                  <div>
+                    <button
+                      type="button"
+                      className={`flex w-full items-center justify-between gap-3 bg-transparent border-none py-3.5 sm:py-4 text-left text-[clamp(1.6rem,7vw,2.5rem)] font-semibold leading-none tracking-tight cursor-pointer transition-colors duration-300 ${
+                        isProjectsActive || mobileProjectsOpen
+                          ? 'text-white'
+                          : 'text-white/55 hover:text-white'
+                      }`}
+                      aria-expanded={mobileProjectsOpen}
+                      onClick={() => setMobileProjectsOpen((o) => !o)}
+                    >
+                      {item.label}
+                      <ChevronDown
+                        size={22}
+                        className={`shrink-0 transition-transform duration-200 ${
+                          mobileProjectsOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                    <div
+                      className={`grid transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                        mobileProjectsOpen
+                          ? 'grid-rows-[1fr] opacity-100 pb-3'
+                          : 'grid-rows-[0fr] opacity-0'
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        {item.dropdown.map((project) => (
+                          <Link
+                            key={project.to}
+                            to={project.to}
+                            className={`block py-2.5 pl-1 text-[17px] font-medium no-underline ${
+                              location.pathname === project.to
+                                ? 'text-white'
+                                : 'text-white/60 hover:text-white'
+                            }`}
+                            onClick={closeMenu}
+                          >
+                            {project.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    to={item.to}
+                    className={`block py-3.5 sm:py-4 text-[clamp(1.6rem,7vw,2.5rem)] font-semibold leading-none tracking-tight no-underline transition-colors duration-300 ${
+                      isActive(item.to) ? 'text-white' : 'text-white/55 hover:text-white'
+                    }`}
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </Link>
+                )}
               </div>
             ))}
           </nav>

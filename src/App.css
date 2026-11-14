@@ -194,29 +194,9 @@
   color: #25a9e0;
 }
 
-.footer__address {
-  color: #FFFFFF;
-  font-family: 'Switzer', sans-serif;
-  font-size: clamp(18px, 3vw, 24px);
-  font-weight: 500;
-  line-height: clamp(26px, 4vw, 36px);
-  letter-spacing: -1px;
-}
-
-/* Beat .footer__social-link { align-items: center } — pin sits on first line */
-.footer__social-link.footer__address {
-  align-items: flex-start;
-}
-
-.footer__address .footer__social-icon {
-  /* Optical vertical center of the first text line */
-  margin-top: calc((clamp(26px, 4vw, 36px) - 20px) / 2);
-}
-
-.footer__address-text {
-  display: block;
-  margin: 0;
-  padding: 0;
+.footer__contact-link--address:hover .footer__social-icon,
+.footer__contact-link--address:focus-visible .footer__social-icon {
+  color: #25a9e0;
 }
 
 .footer__legal-hr {

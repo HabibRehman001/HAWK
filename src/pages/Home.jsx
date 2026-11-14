@@ -8,6 +8,7 @@ import ToolsSection from '../components/ToolsSection';
 import TeamSection from '../components/TeamSection';
 import GlobalPartners from '../components/GlobalPartners';
 import TrustSection from '../components/TrustSection';
+import FaqSection from '../components/FaqSection';
 import Footer from '../components/Footer';
 
 function Home() {
@@ -25,6 +26,7 @@ function Home() {
         <TeamSection />
         <GlobalPartners />
         <TrustSection />
+        <FaqSection />
         <Footer />
       </main>
     </div>
