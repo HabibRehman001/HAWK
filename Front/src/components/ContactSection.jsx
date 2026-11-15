@@ -215,8 +215,8 @@ export default function ContactSection({
         className="pointer-events-none absolute -right-40 -top-40 h-[640px] w-[640px] rounded-full bg-[radial-gradient(closest-side,rgba(30,143,255,0.14),transparent)]"
       />
 
-      <div className="relative mx-auto grid max-w-[1280px] gap-16 px-6 pt-3 pb-24 md:px-10 lg:grid-cols-12 lg:gap-12 lg:pt-4 lg:pb-32">
-        <div className="lg:col-span-6">
+      <div className="relative mx-auto grid max-w-[1280px] gap-16 px-6 pt-6 pb-24 md:px-10 lg:grid-cols-12 lg:gap-12 lg:pt-10 lg:pb-32">
+        <div className="hidden lg:col-span-6 lg:block">
           <h2
             className="text-[clamp(44px,6.4vw,92px)] font-semibold leading-[0.96] tracking-[-0.05em]"
             aria-label={title.join(' ')}
@@ -290,7 +290,7 @@ export default function ContactSection({
           </div>
         </div>
 
-        <div className="cs-panel lg:col-span-6">
+        <div className="cs-panel w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none lg:col-span-6">
           <div
             className={`rounded-2xl border ${hairline} bg-[#070d26] p-6 shadow-[0_40px_100px_-40px_rgba(30,143,255,0.4)] md:p-10`}
           >

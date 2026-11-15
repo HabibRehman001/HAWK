@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { IMG } from '../lib/unsplash';
@@ -19,7 +18,6 @@ const services = [
     title: 'Direct-to-B2B Companies',
     color: '#E84E3A',
     img: imgUiux,
-    to: '/services',
     desc: 'We help the fastest growing startups scale their online presence and stand out in the marketplace.',
   },
   {
@@ -27,7 +25,6 @@ const services = [
     title: 'SaaS and IT Companies',
     color: '#6C5CE7',
     img: imgCms,
-    to: '/services',
     desc: 'Transform your digital product into a high-converting experience that attracts and retains users.',
   },
   {
@@ -35,7 +32,6 @@ const services = [
     title: 'Professional Service Firms',
     color: '#00B894',
     img: imgApp,
-    to: '/services',
     imgStyle: { w: 180, h: 340, fit: 'contain', bg: 'transparent', radius: 0, shadow: 'none' },
     desc: 'We help service providers establish authority and build trust with their ideal clients.',
   },
@@ -44,7 +40,6 @@ const services = [
     title: 'E-commerce Brands',
     color: '#FDCB6E',
     img: imgApi,
-    to: '/services',
     desc: 'Build a brand that stands out from the competition and converts visitors into loyal customers.',
   },
 ];
@@ -254,11 +249,10 @@ const WhatWeDo = () => {
 
           {/* Service rows */}
           {services.map((service, index) => (
-            <Link
+            <div
               key={service.num}
-              to={service.to}
               ref={(el) => (rowRefs.current[index] = el)}
-              className="service-row relative overflow-hidden cursor-pointer block no-underline"
+              className="service-row relative overflow-hidden block"
               onMouseEnter={(e) => handleItemEnter(index, e)}
               onMouseMove={() => handleItemHover(index)}
               style={{
@@ -308,7 +302,7 @@ const WhatWeDo = () => {
                   {service.title}
                 </p>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

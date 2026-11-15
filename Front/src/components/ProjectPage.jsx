@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import AnimatedHeroTitle from './landing/AnimatedHeroTitle';
 import { HERO_TITLE_SIZE } from './landing/PageHero';
+import { CAL_URL } from '../lib/links';
 
 /**
  * PROPS
@@ -11,7 +12,7 @@ import { HERO_TITLE_SIZE } from './landing/PageHero';
  * title         string   "Grid Travel"
  * tagline       string   one sentence under the title
  * liveUrl       string   external demo link (button hidden if empty)
- * contactHref   string   route for "Get in touch" / "Book a call"
+ * contactHref   string   route for "Get in touch"
  * backHref      string   route back to all projects
  * heroImage     string   main image (shown at its natural ratio, never cropped)
  * heroImageAlt  string
@@ -342,9 +343,14 @@ export default function ProjectPage({
           </h2>
           <div className="pp-fade mt-10 flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
             <p className="max-w-md text-lg text-[#a9c3e6]">{ctaText}</p>
-            <Link to={contactHref} className={btnPrimary}>
+            <a
+              href={CAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={btnPrimary}
+            >
               Book a call <ArrowRight size={18} />
-            </Link>
+            </a>
           </div>
         </div>
       </section>

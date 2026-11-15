@@ -2,6 +2,7 @@ import PageHero, { HERO_SECTION_CLASS, HERO_INNER_CLASS } from './landing/PageHe
 import { lazy, Suspense, useEffect, useState } from 'react';
 
 import { IMG } from '../lib/unsplash';
+import { CAL_URL } from '../lib/links';
 
 // Same URL as the HTML <link rel="preload"> — no hashed chunk delay.
 const HERO_IMG = IMG.hero;
@@ -75,7 +76,7 @@ const HeroSection = ({ heroImageRef }) => {
           subtitle="Your Website Should Close Deals While You Sleep."
         >
           <a
-            href="https://cal.com/blue-hawke/30min"
+            href={CAL_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full max-w-[430.82px] h-[216.86px] rounded-[15px] p-[10px] relative overflow-hidden group cursor-pointer flex flex-row items-stretch no-underline"

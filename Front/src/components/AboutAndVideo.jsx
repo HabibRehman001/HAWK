@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import TrustedBy from './TrustedBy';
+import { CAL_URL } from '../lib/links';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -197,7 +198,7 @@ const AboutAndVideo = () => {
             {/* Figma Pixel-Perfect Button */}
             <div>
               <a
-                href="https://cal.com/blue-hawke/30min"
+                href={CAL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center justify-center gap-2.5 rounded-[15px] text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl cursor-pointer no-underline"

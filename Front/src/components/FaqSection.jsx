@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
+import { CAL_URL_OVERLAY as CAL_URL } from '../lib/links';
 
-const FAQ_LEFT = [
+const FAQS = [
   {
     q: 'How fast can you ship a website or app?',
     a: 'Most websites are delivered within 7 days. Timelines mainly depend on feedback speed, approvals, and the overall project scope. If responses or revisions are delayed, delivery timelines naturally shift as well — but our team moves quickly once everything is aligned.\n\nFor mobile apps, development usually takes a few months depending on the features, complexity, integrations, and overall functionality required. More advanced apps with custom systems, subscriptions, GPS, dashboards, or real-time features may require additional development time to ensure everything is built properly and smoothly.',
@@ -26,9 +27,6 @@ const FAQ_LEFT = [
     q: 'What happens after the project is launched?',
     a: 'We help with deployment, testing, launch support, optimization, and scaling guidance. Our goal isn’t just to finish a project — it’s to help your product succeed after launch too.',
   },
-];
-
-const FAQ_RIGHT = [
   {
     q: 'Why choose Blue Hawke over another agency?',
     a: 'Because you work directly with creatives and builders — not just project managers passing messages around. The people designing and building your product are the same people speaking with you, understanding your vision, and executing it.',
@@ -55,12 +53,17 @@ const FAQ_RIGHT = [
   },
 ];
 
-const CAL_URL = 'https://cal.com/blue-hawke/30min?overlayCalendar=true';
+/** Phone: first 4 · Tablet: first 8 · Laptop+: all */
+function itemVisibility(index) {
+  if (index >= 8) return 'hidden lg:block';
+  if (index >= 4) return 'hidden md:block';
+  return 'block';
+}
 
 function FaqItem({ item, open, onToggle }) {
   return (
     <div
-      className="rounded-2xl"
+      className="min-w-0 rounded-2xl"
       style={{
         background:
           'linear-gradient(180deg, rgba(1, 5, 19, 0.1) 0%, rgb(1, 5, 19) 100%)',
@@ -72,15 +75,15 @@ function FaqItem({ item, open, onToggle }) {
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="flex w-full items-start justify-between gap-4 bg-transparent border-none px-5 py-5 text-left cursor-pointer md:px-6"
+        className="flex w-full items-start justify-between gap-2 bg-transparent border-none px-3 py-4 text-left cursor-pointer sm:gap-4 sm:px-5 sm:py-5 md:px-6"
       >
         <span
-          className="text-[16px] md:text-[17px] font-medium leading-snug text-[#f0f8ff]"
+          className="text-[13px] sm:text-[16px] md:text-[17px] font-medium leading-snug text-[#f0f8ff]"
           style={{ fontFamily: 'Switzer, sans-serif' }}
         >
           {item.q}
         </span>
-        <span className="mt-0.5 grid size-7 shrink-0 place-items-center text-[#cfe6ff]">
+        <span className="mt-0.5 grid size-6 sm:size-7 shrink-0 place-items-center text-[#cfe6ff]">
           {open ? <Minus size={18} strokeWidth={2} /> : <Plus size={18} strokeWidth={2} />}
         </span>
       </button>
@@ -91,11 +94,11 @@ function FaqItem({ item, open, onToggle }) {
         }`}
       >
         <div className="overflow-hidden">
-          <div className="px-5 pb-5 md:px-6 md:pb-6">
+          <div className="px-3 pb-4 sm:px-5 sm:pb-5 md:px-6 md:pb-6">
             {item.a.split('\n\n').map((p, i) => (
               <p
                 key={i}
-                className={`text-[14px] md:text-[15px] leading-relaxed text-[#cfe6ff]/85 whitespace-pre-line ${
+                className={`text-[13px] sm:text-[14px] md:text-[15px] leading-relaxed text-[#cfe6ff]/85 whitespace-pre-line ${
                   i > 0 ? 'mt-3' : ''
                 }`}
                 style={{ fontFamily: 'Switzer, sans-serif' }}
@@ -112,6 +115,24 @@ function FaqItem({ item, open, onToggle }) {
 
 export default function FaqSection() {
   const [openId, setOpenId] = useState(0);
+
+  // Two independent stacks so opening one FAQ never stretches its neighbor
+  const left = FAQS.map((item, i) => ({ item, i })).filter(({ i }) => i % 2 === 0);
+  const right = FAQS.map((item, i) => ({ item, i })).filter(({ i }) => i % 2 === 1);
+
+  const renderColumn = (entries) => (
+    <div className="flex flex-col gap-2 sm:gap-3 md:gap-4">
+      {entries.map(({ item, i }) => (
+        <div key={item.q} className={itemVisibility(i)}>
+          <FaqItem
+            item={item}
+            open={openId === i}
+            onToggle={() => setOpenId((cur) => (cur === i ? -1 : i))}
+          />
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <section
@@ -153,30 +174,10 @@ export default function FaqSection() {
           </p>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2 md:gap-4">
-          <div className="flex flex-col gap-3 md:gap-4">
-            {FAQ_LEFT.map((item, i) => (
-              <FaqItem
-                key={item.q}
-                item={item}
-                open={openId === i}
-                onToggle={() => setOpenId((cur) => (cur === i ? -1 : i))}
-              />
-            ))}
-          </div>
-          <div className="flex flex-col gap-3 md:gap-4">
-            {FAQ_RIGHT.map((item, i) => {
-              const id = FAQ_LEFT.length + i;
-              return (
-                <FaqItem
-                  key={item.q}
-                  item={item}
-                  open={openId === id}
-                  onToggle={() => setOpenId((cur) => (cur === id ? -1 : id))}
-                />
-              );
-            })}
-          </div>
+        {/* Phone 2×2 (4) · Tablet 2×4 (8) · Laptop all — columns are independent */}
+        <div className="grid grid-cols-2 items-start gap-2 sm:gap-3 md:gap-4">
+          {renderColumn(left)}
+          {renderColumn(right)}
         </div>
 
         <div className="mt-12 text-center md:mt-16">

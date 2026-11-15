@@ -4,7 +4,7 @@ import DocumentTitle from './components/DocumentTitle'
 import ScrollToTopButton from './components/ScrollToTopButton'
 import { setLenis, getLenis } from './lib/scrollBus'
 import { initSectionSnap, shouldEnableSectionSnap } from './lib/magneticSnap'
-
+image.png
 const Home = lazy(() => import('./pages/Home'))
 const Privacy = lazy(() => import('./pages/Privacy'))
 const Terms = lazy(() => import('./pages/Terms'))
